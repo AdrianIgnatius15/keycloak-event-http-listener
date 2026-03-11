@@ -63,8 +63,8 @@ public class HTTPEventListenerProviderFactory implements EventListenerProviderFa
                 excludedAdminOperations.add(OperationType.valueOf(e));
             }
         }
-
-        serverUri = config.get("serverUri", "http://nginx/frontend_dev.php/webhook/keycloak");
+        String environmentURI = System.getenv("HTTP_EVENT_LISTENER_URL");
+        serverUri = config.get("serverUri", environmentURI != null ? environmentURI : "http://nginx/frontend_dev.php/webhook/keycloak");
         username = config.get("username", null);
         password = config.get("password", null);
         topic = config.get("topic", "keycloak/events");
