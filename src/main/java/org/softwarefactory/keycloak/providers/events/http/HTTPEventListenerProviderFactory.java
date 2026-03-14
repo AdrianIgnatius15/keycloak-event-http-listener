@@ -27,7 +27,6 @@ import org.keycloak.models.KeycloakSessionFactory;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.lang.Exception;
 
 /**
  * @author <a href="mailto:jessy.lenne@stadline.com">Jessy Lennee</a>
@@ -37,13 +36,14 @@ public class HTTPEventListenerProviderFactory implements EventListenerProviderFa
     private Set<EventType> excludedEvents;
     private Set<OperationType> excludedAdminOperations;
     private String serverUri;
+    private String apiSecret;
     private String username;
     private String password;
     private String topic;
 
     @Override
     public EventListenerProvider create(KeycloakSession session) {
-        return new HTTPEventListenerProvider(excludedEvents, excludedAdminOperations, serverUri, username, password, topic);
+        return new HTTPEventListenerProvider(excludedEvents, excludedAdminOperations, serverUri, apiSecret,  username, password, topic);
     }
 
     @Override
@@ -64,6 +64,7 @@ public class HTTPEventListenerProviderFactory implements EventListenerProviderFa
             }
         }
         String environmentURI = System.getenv("HTTP_EVENT_LISTENER_URL");
+        apiSecret = System.getenv("HTTP_EVENT_LISTENER_SECRET");
         serverUri = config.get("serverUri", environmentURI != null ? environmentURI : "http://nginx/frontend_dev.php/webhook/keycloak");
         username = config.get("username", null);
         password = config.get("password", null);
