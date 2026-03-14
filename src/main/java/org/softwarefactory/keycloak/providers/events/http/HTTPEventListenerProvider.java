@@ -62,8 +62,15 @@ public class HTTPEventListenerProvider implements EventListenerProvider {
             return;
         } else {
             String stringEvent = toString(event);
-            char[] passwordArray = this.password.toCharArray();
-            String passwordString = new String(passwordArray);
+            String passwordString = "";
+
+            Boolean passwordExists = false;
+            if (this.password != null && !this.password.isEmpty()) {
+                passwordExists = true;
+                char[] passwordArray = this.password.toCharArray();
+                passwordString = new String(passwordArray);
+            }
+
             try {
             	// RequestBody formBody = new FormBody.Builder()
                 //         .add("json", stringEvent)
@@ -75,8 +82,13 @@ public class HTTPEventListenerProvider implements EventListenerProvider {
                         .addHeader("User-Agent", "KeycloakHttp Bot");
             	
 
-                if (this.username != null && this.password != null) {
-                	builder.addHeader("Authorization", "Basic " + this.username + ":" + passwordString);
+                if (passwordExists) {
+                    if (this.username != null && !this.username.isEmpty() && passwordString != null) {
+                        String auth = this.username + ":" + passwordString;
+                        String encodedAuth = java.util.Base64.getEncoder().encodeToString(auth.getBytes());
+                        // builder.addHeader("Authorization", "Basic " + this.username + ":" + passwordString);
+                        builder.addHeader("Authorization", "Basic " + encodedAuth);
+                    }
                 }
 
                 if (this.apiSecret != null && !this.apiSecret.isEmpty()) {
@@ -110,8 +122,14 @@ public class HTTPEventListenerProvider implements EventListenerProvider {
             return;
         } else {
             String stringEvent = toString(event);
-            char[] passwordArray = this.password.toCharArray();
-            String passwordString = new String(passwordArray);
+            String passwordString = "";
+
+            Boolean passwordExists = false;
+            if (this.password != null && !this.password.isEmpty()) {
+                passwordExists = true;
+                char[] passwordArray = this.password.toCharArray();
+                passwordString = new String(passwordArray);
+            }
             try {
             	// RequestBody formBody = new FormBody.Builder()
                 //         .add("json", stringEvent)
@@ -123,8 +141,13 @@ public class HTTPEventListenerProvider implements EventListenerProvider {
                         .addHeader("User-Agent", "KeycloakHttp Bot");
             	
 
-                if (this.username != null && this.password != null) {
-                	builder.addHeader("Authorization", "Basic " + this.username + ":" + passwordString);
+                if (passwordExists) {
+                    if (this.username != null && !this.username.isEmpty() && passwordString != null) {
+                        String auth = this.username + ":" + passwordString;
+                        String encodedAuth = java.util.Base64.getEncoder().encodeToString(auth.getBytes());
+                        // builder.addHeader("Authorization", "Basic " + this.username + ":" + passwordString);
+                        builder.addHeader("Authorization", "Basic " + encodedAuth);
+                    }
                 }
 
                 if (this.apiSecret != null && !this.apiSecret.isEmpty()) {
