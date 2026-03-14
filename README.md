@@ -4,15 +4,54 @@ A Keycloak SPI that publishes events to an HTTP Webhook.
 A (largely) adaptation of @mhui mhuin/keycloak-event-listener-mqtt SPI.
 Extended by @darrensapalo to [enable building the JAR files from docker images](https://sapalo.dev/2021/06/16/send-keycloak-webhook-events/).
 
-# Build
+## Key Features (v2.0)
+    Standard JSON: Sends valid JSON with double quotes and proper headers (application/json).
 
-## Build on your local machine
+    Environment Configuration: Supports standard environment variables for easy Docker deployment.
 
+    Security: Supports a custom API Secret header for webhook validation.
+
+    Modern Dependencies: Updated to use OkHttp 4.12.0.
+
+## Build
+1. ### Requirements
+Ensure you have the following dependencies in your pom.xml or added to your Keycloak providers folder:
+
+    `okhttp-4.12.0.jar`
+
+    `okio-jvm-3.9.0.jar`
+
+    `kotlin-stdlib-1.9.23.jar`
+
+2. ### Compile
+Run the command below. Ensure you have Maven installed on your local machine.
 ```
 mvn clean install
 ```
+The JAR will be generated in the `target/ folder` as `event-listener-http-jar-with-dependencies.jar.`
 
-## Build using docker
+
+
+## Build using docker (using Docker compose if you want)
+
+```yaml
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    volumes:
+      - ./plugins:/opt/keycloak/providers
+    environment:
+      # The Webhook URL
+      HTTP_EVENT_LISTENER_URL: "<your-full-API-endpoint>"
+      # Security Secret (sent in X-Event-Secret header)
+      HTTP_EVENT_LISTENER_SECRET: "your-secure-secret-here"
+    command: 
+      - start-dev 
+      - --http-enabled=true 
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+```
+
 
 Alternatively, you can [build the JAR files from a docker image](https://sapalo.dev/2021/06/16/send-keycloak-webhook-events/). You must have `docker` installed.
 
