@@ -1,2 +1,5 @@
 # Just so that we don't store the docker image build output into the repository.
 mvn-output/
+
+# Folders to ignore
+.vscode
