@@ -3,3 +3,7 @@ mvn-output/
 
 # Folders to ignore
 .vscode
+
+# Files to ignore
+*result-updated.json
+*result.json
